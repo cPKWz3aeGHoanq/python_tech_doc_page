@@ -16,18 +16,432 @@
     <main id="main-doc">
       <section class="main-section" id="Interpreter">
         <header>Interpreter</header>
+        <h2>Invoking the Interpreter</h2>
+        <p>
+          The Python interpreter is usually installed as
+          <code>/usr/local/bin/python3.9</code> on those machines where it is
+          available; putting /usr/local/bin in your Unix shell’s search path
+          makes it possible to start it by typing the command:
+        </p>
+        <div class="codeblock"><pre>python3.9</pre></div>
+        <p>
+          to the shell. 1 Since the choice of the directory where the
+          interpreter lives is an installation option, other places are
+          possible; check with your local Python guru or system administrator.
+          (E.g., /usr/local/python is a popular alternative location.)
+        </p>
+        <h3>Argument Passing</h3>
+        <p>
+          When known to the interpreter, the script name and additional
+          arguments thereafter are turned into a list of strings and assigned to
+          the <code>argv</code> variable in the <code>sys</code> module. You can
+          access this list by executing <code>import sys</code>.. The length of
+          the list is at least one; when no script and no arguments are given,
+          <code>sys.argv[0]</code> is an empty string. When the script name is
+          given as <code>'-'</code> (meaning standard input),
+          <code>sys.argv[0]</code> is set to <code>'-'</code>. When
+          <code>-c</code> command is used, <code>sys.argv[0]</code> is set to
+          <code>'-c'</code>. When <code>-m</code> module is used,
+          <code>sys.argv[0]</code> is set to the full name of the located
+          module. Options found after <code>'-c'</code> command or
+          <code>-m</code> module are not consumed by the Python interpreter’s
+          option processing but left in <code>sys.argv</code> for the command or
+          module to handle.
+        </p>
+        <h3>Interactive Mode</h3>
+        <p>
+          When commands are read from a tty, the interpreter is said to be in
+          <i>interactive mode</i>. In this mode it prompts for the next command
+          with the <i>primary prompt</i>, usually three greater-than signs
+          <code>(>>>)</code>; for continuation lines it prompts with the
+          <i>secondary prompt</i>, by default three dots <code>(...)</code>. The
+          interpreter prints a welcome message stating its version number and a
+          copyright notice before printing the first prompt:
+        </p>
+        <div class="codeblock">
+          <pre>$ python3.9 <br />Python 3.9 (default, June 4 2019, 09:25:04)<br />[GCC 4.8.2] on linux <br />Type "help", "copyright", "credits" or "license" for more information.<br />>>></pre>
+        </div>
+        <h2>The Interpreter and Its Environment</h2>
+        <h3>Source Code Encoding</h3>
+        <p>
+          By default, Python source files are treated as encoded in UTF-8. In
+          that encoding, characters of most languages in the world can be used
+          simultaneously in string literals, identifiers and comments — although
+          the standard library only uses ASCII characters for identifiers, a
+          convention that any portable code should follow. To display all these
+          characters properly, your editor must recognize that the file is
+          UTF-8, and it must use a font that supports all the characters in the
+          file.
+        </p>
+        <p>
+          To declare an encoding other than the default one, a special comment
+          line should be added as the <i>first</i> line of the file. The syntax
+          is as follows:
+        </p>
+        <div class="codeblock">
+          <pre><i># -*- coding: encoding -*-</i></pre>
+        </div>
+        <p>
+          where <i>encoding</i> is one of the valid codecs supported by Python.
+        </p>
       </section>
       <section class="main-section" id="Data_Types">
         <header>Data Types</header>
+        <p>
+          In the following examples, input and output are distinguished by the
+          presence or absence of prompts (<code>>>></code> and
+          <code>...</code>): to repeat the example, you must type everything
+          after the prompt, when the prompt appears; lines that do not begin
+          with a prompt are output from the interpreter. Note that a secondary
+          prompt on a line by itself in an example means you must type a blank
+          line; this is used to end a multi-line command.
+        </p>
+        <p>
+          Many of the examples in this manual, even those entered at the
+          interactive prompt, include comments. Comments in Python start with
+          the hash character, #, and extend to the end of the physical line. A
+          comment may appear at the start of a line or following whitespace or
+          code, but not within a string literal. A hash character within a
+          string literal is just a hash character. Since comments are to clarify
+          code and are not interpreted by Python, they may be omitted when
+          typing in examples.
+        </p>
+        <p>Some examples:</p>
+        <div class="codeblock">
+          <i> # this is the first comment </i><br />
+          spam = 1
+          <i
+            ># and this is the second comment <br />
+            # ... and now a third! </i
+          ><br />
+          text = "# This is not a comment because it's inside quotes."
+        </div>
+        <h2>Numbers</h2>
+        <p>
+          The interpreter acts as a simple calculator: you can type an
+          expression at it and it will write the value. Expression syntax is
+          straightforward: the operators <code>+</code>, <code>-</code>,
+          <code>*</code> and <code>/</code> work just like in most other
+          languages (for example, Pascal or C); parentheses (<code>()</code>)
+          can be used for grouping. For example:
+        </p>
+        <div class="codeblock">
+          >>> 2 + 2 <br />4 <br />>>> 50 - 5*6 <br />
+          20 <br />
+          >>> (50 - 5*6) / 4 <br />5.0 <br />
+          >>> 8 / 5 <i> # division always returns a floating point number </i
+          ><br />1.6
+        </div>
+        <h2>Strings</h2>
+        <p>
+          Besides numbers, Python can also manipulate strings, which can be
+          expressed in several ways. They can be enclosed in single quotes
+          (<code>'...'</code> ) or double quotes (<code>"..."</code> ) with the
+          same result 2. <code>\</code> can be used to escape quotes:
+        </p>
+        <div class="codeblock">
+          <pre>>>> 'spam eggs' <i># single quotes</i> <br /></pre>
+          <pre>'spam eggs'<br /></pre>
+          <pre>>>> 'doesn\'t' <i># use \' to escape the single quote...</i> <br /></pre>
+          <pre>"doesn't"<br /></pre>
+          <pre>>>> "doesn't" <i># ...or use double quotes instead</i><br /></pre>
+          <pre>"doesn't" <br /></pre>
+          <pre>>>> '"Yes," they said.' <br /></pre>
+          <pre>'"Yes," they said.' <br /></pre>
+          <pre>>>> "\"Yes,\" they said." <br /></pre>
+          <pre>'"Yes," they said.' <br /></pre>
+          <pre>>>> '"Isn\'t," they said.'<br /></pre>
+          <pre>'"Isn\'t," they said.' <br /></pre>
+        </div>
+        <p>
+          In the interactive interpreter, the output string is enclosed in
+          quotes and special characters are escaped with backslashes. While this
+          might sometimes look different from the input (the enclosing quotes
+          could change), the two strings are equivalent. The string is enclosed
+          in double quotes if the string contains a single quote and no double
+          quotes, otherwise it is enclosed in single quotes. The print()
+          function produces a more readable output, by omitting the enclosing
+          quotes and by printing escaped and special characters.
+        </p>
+        <h2>Lists</h2>
+        <p>
+          Python knows a number of <i>compound</i> data types, used to group
+          together other values. The most versatile is the <i>list</i>, which
+          can be written as a list of comma-separated values (items) between
+          square brackets. Lists might contain items of different types, but
+          usually the items all have the same type.
+        </p>
+        <div class="codeblock">
+          <pre>>>> squares = [1, 4, 9, 16, 25] <br />>>> squares <br />[1, 4, 9, 16, 25]</pre>
+        </div>
+        <p>
+          Like strings (and all other built-in sequence types), lists can be
+          indexed and sliced.
+        </p>
       </section>
       <section class="main-section" id="Flow_Controls">
         <header>Flow Controls</header>
+        <p>
+          Besides the <i>while</i> statement just introduced, Python uses the
+          usual flow control statements known from other languages, with some
+          twists.
+        </p>
+        <ul>
+          <li>
+            <h2>
+              <pre>if</pre>
+              Statement
+            </h2>
+            <p>
+              Perhaps the most well-known statement type is the
+              <code>if</code> statement. For example:
+            </p>
+            <div class="codeblock">
+              <pre>
+>>> x = int(input("Please enter an integer: "))
+Please enter an integer: 42
+>>> if x < 0:
+...     x = 0
+...     print('Negative changed to zero')
+... elif x == 0:
+...     print('Zero')
+... elif x == 1:
+...     print('Single')
+... else:
+...     print('More')
+...
+More</pre
+              >
+            </div>
+          </li>
+          <li>
+            <h2>
+              <pre>for</pre>
+              Statements
+            </h2>
+            <p>
+              The <code>for</code> statement in Python differs a bit from what
+              you may be used to in C or Pascal. Rather than always iterating
+              over an arithmetic progression of numbers (like in Pascal), or
+              giving the user the ability to define both the iteration step and
+              halting condition (as C), Python’s for statement iterates over the
+              items of any sequence (a list or a string), in the order that they
+              appear in the sequence. For example (no pun intended):
+            </p>
+            <div class="codeblock">
+              <pre>>>> <i> # Measure some strings: </i>
+... words = ['cat', 'window', 'defenestrate']
+>>> for w in words:
+...     print(w, len(w))
+...
+cat 3
+window 6
+defenestrate 12
+                </pre>
+            </div>
+          </li>
+          <li>
+            <h2>
+              The
+              <pre>range()</pre>
+              Function
+            </h2>
+            <p>
+              If you do need to iterate over a sequence of numbers, the built-in
+              function <code>range()</code> comes in handy. It generates
+              arithmetic progressions:
+            </p>
+            <div class="codeblock">
+              <pre>
+>>> for i in range(5):
+...     print(i)
+...
+0
+1
+2
+3
+4</pre
+              >
+            </div>
+            <p>
+              The given end point is never part of the generated sequence;
+              range(10) generates 10 values, the legal indices for items of a
+              sequence of length 10. It is possible to let the range start at
+              another number, or to specify a different increment (even
+              negative; sometimes this is called the ‘step’).
+            </p>
+          </li>
+          <li>
+            <h2>
+              <pre>break</pre>
+              and
+              <pre>continue</pre>
+              Statements, and
+              <pre>else</pre>
+              Clauses on Loops
+            </h2>
+            <p>
+              The <code>break</code> statement, like in C, breaks out of the
+              innermost enclosing <code>for</code> or <code>while</code> loop.
+            </p>
+            <p>
+              Loop statements may have an else clause; it is executed when the
+              loop terminates through exhaustion of the iterable (with
+              <code>for</code>) or when the condition becomes false (with
+              <code>while</code>), but not when the loop is terminated by a
+              <code>break</code> statement. This is exemplified by the following
+              loop, which searches for prime numbers:
+            </p>
+            <div class="codeblock">
+              <pre>
+>>> for n in range(2, 10):
+...     for x in range(2, n):
+...         if n % x == 0:
+...             print(n, 'equals', x, '*', n//x)
+...             break
+...     else:
+...         <i># loop fell through without finding a factor</i>
+...         print(n, 'is a prime number')
+...
+2 is a prime number
+3 is a prime number
+4 equals 2 * 2
+5 is a prime number
+6 equals 2 * 3
+7 is a prime number
+8 equals 2 * 4
+9 equals 3 * 3</pre>
+            </div>
+            <p>
+              (Yes, this is the correct code. Look closely: the
+              <code>else</code> clause belongs to the for loop, not the
+              <code>if</code> statement.)
+            </p>
+          </li>
+          <li>
+            <h2>
+              <pre>pass</pre>
+              Statements
+            </h2>
+            <p>
+              The <code>pass</code> statement does nothing. It can be used when
+              a statement is required syntactically but the program requires no
+              action. For example:
+            </p>
+            <div class="codeblock">
+              <pre>>>> while True:
+...     pass <i># Busy-wait for keyboard interrupt (Ctrl+C)</i> 
+... </pre>
+            </div>
+          </li>
+        </ul>
       </section>
       <section class="main-section" id="Data_Structures">
         <header>Data Structures</header>
+        <h2>Lists</h2>
+        <p>
+          The list data type has some more methods. Here are all of the methods
+          of list objects:
+        </p>
+        <ul id="list-methods">
+          <li>
+            <pre>list.append(x)</pre>
+            <p>
+              Add an item to the end of the list. Equivalent to
+              <code>a[len(a):] = [x]</code>.
+            </p>
+          </li>
+          <li>
+            <pre>list.extend(iterable)</pre>
+            <p>
+              Extend the list by appending all the items from the iterable.
+              Equivalent to <code>a[len(a):] = iterable</code>.
+            </p>
+          </li>
+          <li>
+            <pre>list.insert(i, x)</pre>
+            <p>
+              insert(i, x) Insert an item at a given position. The first
+              argument is the index of the element before which to insert, so
+              <code>a.insert(0, x)</code> inserts at the front of the list, and
+              <code>a.insert(len(a), x)</code> is equivalent to
+              <code>a.append(x</code>).
+            </p>
+          </li>
+        </ul>
+        <p>An example that uses most of the list methods:</p>
+        <div class="codeblock">
+          <pre>
+>>> fruits = ['orange', 'apple', 'pear', 'banana', 'kiwi', 'apple', 'banana']
+>>> fruits.count('apple')
+2
+>>> fruits.count('tangerine')
+0
+>>> fruits.index('banana')
+3
+>>> fruits.index('banana', 4) <i># Find next banana starting a position 4</i>  
+6
+>>> fruits.reverse()
+>>> fruits
+['banana', 'apple', 'kiwi', 'banana', 'pear', 'apple', 'orange']
+>>> fruits.append('grape')
+>>> fruits
+['banana', 'apple', 'kiwi', 'banana', 'pear', 'apple', 'orange', 'grape']
+>>> fruits.sort()
+>>> fruits
+['apple', 'apple', 'banana', 'banana', 'grape', 'kiwi', 'orange', 'pear']
+>>> fruits.pop()
+'pear'</pre>
+        </div>
       </section>
       <section class="main-section" id="Modules">
         <header>Modules</header>
+        <p>
+          If you quit from the Python interpreter and enter it again, the
+          definitions you have made (functions and variables) are lost.
+          Therefore, if you want to write a somewhat longer program, you are
+          better off using a text editor to prepare the input for the
+          interpreter and running it with that file as input instead. This is
+          known as creating a <i>script</i>. As your program gets longer, you
+          may want to split it into several files for easier maintenance. You
+          may also want to use a handy function that you’ve written in several
+          programs without copying its definition into each program.
+        </p>
+        <p>
+          To support this, Python has a way to put definitions in a file and use
+          them in a script or in an interactive instance of the interpreter.
+          Such a file is called a <i>module</i>; definitions from a module can
+          be <i>imported</i> into other modules or into the <i>main</i> module
+          (the collection of variables that you have access to in a script
+          executed at the top level and in calculator mode).
+        </p>
+        <p>
+          A module is a file containing Python definitions and statements. The
+          file name is the module name with the suffix
+          <code>.py</code> appended. Within a module, the module’s name (as a
+          string) is available as the value of the global variable
+          <code>__name__</code>. For instance, use your favorite text editor to
+          create a file called <code>fibo.py</code> in the current directory
+          with the following contents:
+        </p>
+        <div class="codeblock">
+          <pre><i># Fibonacci numbers module</i>
+
+def fib(n):   <i> # write Fibonacci series up to n</i>
+    a, b = 0, 1
+    while a < n:
+        print(a, end=' ')
+        a, b = b, a+b
+    print()
+
+def fib2(n):   <i># return Fibonacci series up to n</i>
+    result = []
+    a, b = 0, 1
+    while a < n:
+        result.append(a)
+        a, b = b, a+b
+    return result</pre>
+        </div>
       </section>
     </main>
   </div>
